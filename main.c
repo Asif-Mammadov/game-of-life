@@ -4,6 +4,8 @@
  */
 
 #include <stdio.h>
+#include "ansi.h"
+
 #define BOARD_WIDTH (5) /**< The width of the board */
 #define BOARD_HEIGHT (5) /**< The height of the board */
 
@@ -17,9 +19,11 @@ void reset_board(Cell board[][BOARD_WIDTH]);
 void copy_board(Cell dest_board[][BOARD_WIDTH], Cell src_board[][BOARD_WIDTH]);
 
 int main() {
+  setupConsole();
+
   Cell board[BOARD_HEIGHT][BOARD_WIDTH];
   reset_board(board);
-  
+
   // Example of cell at (2, 2) with 3 neighbours.  
   board[1][1] = ALIVE;
   board[1][3] = ALIVE;
@@ -27,11 +31,13 @@ int main() {
   board[3][3] = ALIVE;
 
   for (int i = 0; i < 5; i++) {
-    printf("t : %d\n", i);
+    printf("(t : %d)\n", i);
     print_board(board);
     printf("\n");
     update_board(board);
   }
+
+  restoreConsole();
 
   return 0;
 }
@@ -62,16 +68,20 @@ void update_board(Cell board[][BOARD_WIDTH]) {
 
 /**
  * Prints the cell values in board to the terminal as a grid with rows and
- * columns. It prints "o" if cell is alive and "x" if cell is dead.
+ * columns.
  * @param board The 2D array of cells
  */
 void print_board(Cell board[][BOARD_WIDTH]) {
   for (int i = 0; i < BOARD_HEIGHT; i++) {
     for (int j = 0; j < BOARD_WIDTH; j++) {
       if (is_alive(board[i][j]))
-        printf("x ");
+        set_backgound_color(RED_BKG);
       else
-        printf("o ");
+        set_backgound_color(WHITE_BKG);
+
+      // Print cell and reset color
+      printf("  ");
+      reset_color();
     }
     printf("\n");
   }
@@ -94,38 +104,34 @@ int count_alive_neighbours(Cell board[][BOARD_WIDTH], int i, int j) {
   if (j == 0)
     j = BOARD_WIDTH;
 
-  if (is_alive(board[i - 1][j - 1]))
-    count++;
-  if (is_alive(board[i - 1][j % BOARD_WIDTH]))
-    count++;
-  if (is_alive(board[i - 1][(j + 1) % BOARD_WIDTH]))
-    count++;
+  // List of neighbours of the given cell
+  Cell neighbours[] = {
+    board[i - 1][j - 1],
+    board[i - 1][j % BOARD_WIDTH],
+    board[i - 1][(j + 1) % BOARD_WIDTH],
+    board[i % BOARD_HEIGHT][j - 1],
+    board[i % BOARD_HEIGHT][(j + 1) % BOARD_WIDTH],
+    board[(i + 1) % BOARD_HEIGHT][j - 1],
+    board[(i + 1) % BOARD_HEIGHT][j % BOARD_WIDTH],
+    board[(i + 1) % BOARD_HEIGHT][(j + 1) % BOARD_WIDTH]
+  };
 
-  if (is_alive(board[i % BOARD_HEIGHT][j - 1]))
-    count++;
-  if (is_alive(board[i % BOARD_HEIGHT][(j + 1) % BOARD_WIDTH]))
-    count++;
-
-  if (is_alive(board[(i + 1) % BOARD_HEIGHT][j - 1]))
-    count++;
-  if (is_alive(board[(i + 1) % BOARD_HEIGHT][j % BOARD_WIDTH]))
-    count++;
-  if (is_alive(board[(i + 1) % BOARD_HEIGHT][(j + 1) % BOARD_WIDTH]))
-    count++;
+  // Iterate thorugh the neighbours and count alive ones
+  for (int k = 0; k < 8; k++) {
+    if(is_alive(neighbours[k]))
+      count++;
+  }
 
   return count;
 }
 
 /**
- * Checks if the the cell is alive
+ * Checks if the cell is alive
  * @param c Cell type that can be either DEAD or ALIVE
  * @return 1 If the cell is alive. Otherwise return 0.
  */
 int is_alive(Cell c) {
-  if (c == ALIVE)
-    return 1;
-  else
-    return 0;
+  return (c == ALIVE);
 }
 
 /**
