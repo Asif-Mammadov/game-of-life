@@ -4,7 +4,7 @@
  */
 
 #include <stdio.h>
-#include "ansi_escapes.h"
+#include "ansi.h"
 
 #define BOARD_WIDTH (5) /**< The width of the board */
 #define BOARD_HEIGHT (5) /**< The height of the board */
@@ -29,9 +29,6 @@ int main() {
   board[1][3] = ALIVE;
   board[2][2] = ALIVE;
   board[3][3] = ALIVE;
-
-  // Clear screen before starting the game
-  clearScreen();
 
   for (int i = 0; i < 5; i++) {
     printf("(t : %d)\n", i);
@@ -78,13 +75,13 @@ void print_board(Cell board[][BOARD_WIDTH]) {
   for (int i = 0; i < BOARD_HEIGHT; i++) {
     for (int j = 0; j < BOARD_WIDTH; j++) {
       if (is_alive(board[i][j]))
-        setBackgroundColor(RED_BKG);
+        set_backgound_color(RED_BKG);
       else
-        setBackgroundColor(WHITE_BKG);
+        set_backgound_color(WHITE_BKG);
 
       // Print cell and reset color
       printf("  ");
-      resetColor();
+      reset_color();
     }
     printf("\n");
   }
@@ -129,7 +126,7 @@ int count_alive_neighbours(Cell board[][BOARD_WIDTH], int i, int j) {
 }
 
 /**
- * Checks if the the cell is alive
+ * Checks if the cell is alive
  * @param c Cell type that can be either DEAD or ALIVE
  * @return 1 If the cell is alive. Otherwise return 0.
  */

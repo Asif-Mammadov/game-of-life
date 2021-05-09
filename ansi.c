@@ -1,3 +1,8 @@
+/**
+ * @file ansi.c
+ * @brief Source file for configuration of console for different OS
+ */
+
 #ifdef _WIN32
 #define  _CRT_SECURE_NO_WARNINGS 1
 #include <windows.h>
@@ -18,7 +23,10 @@
 static HANDLE stdoutHandle, stdinHandle;
 static DWORD outModeInit, inModeInit;
 
-void setupConsole(void) {
+/**
+ * Setup the console to be able to use ANSI escape codes in Windows
+ */
+void setupConsole() {
     DWORD outMode = 0, inMode = 0;
     stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     stdinHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -45,7 +53,10 @@ void setupConsole(void) {
     }    
 }
 
-void restoreConsole(void) {
+/**
+ * Set console config to default for Windows
+ */
+void restoreConsole() {
     // Reset colors
     printf("\x1b[0m");    
     
@@ -59,7 +70,10 @@ void restoreConsole(void) {
 static struct termios orig_term;
 static struct termios new_term;
 
-void setupConsole(void) {
+/**
+ * Setup console for MacOS and Linux
+ */
+void setupConsole() {
     tcgetattr(STDIN_FILENO, &orig_term);
     new_term = orig_term;
 
@@ -68,7 +82,10 @@ void setupConsole(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &new_term);
 }
 
-void restoreConsole(void) {
+/**
+ * Set console config to default for MacOS and Linux
+ */
+void restoreConsole() {
     // Reset colors
     printf("\x1b[0m");
 
@@ -76,20 +93,3 @@ void restoreConsole(void) {
     tcsetattr(STDIN_FILENO, TCSANOW, &orig_term);
 }
 #endif
-
-void getCursorPosition(int *row, int *col) {
-    printf("\x1b[6n");
-    char buff[128];
-    int indx = 0;
-    for(;;) {
-        int cc = getchar();
-        buff[indx] = (char)cc;
-        indx++;
-        if(cc == 'R') {
-            buff[indx + 1] = '\0';
-            break;
-        }
-    }    
-    sscanf(buff, "\x1b[%d;%dR", row, col);
-    fseek(stdin, 0, SEEK_END);
-}
