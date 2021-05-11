@@ -19,7 +19,7 @@ void reset_board(Cell board[][BOARD_WIDTH]);
 void copy_board(Cell dest_board[][BOARD_WIDTH], Cell src_board[][BOARD_WIDTH]);
 
 int main() {
-  setupConsole();
+  setup_console();
 
   Cell board[BOARD_HEIGHT][BOARD_WIDTH];
   reset_board(board);
@@ -37,7 +37,7 @@ int main() {
     update_board(board);
   }
 
-  restoreConsole();
+  restore_console();
 
   return 0;
 }
@@ -116,7 +116,7 @@ int count_alive_neighbours(Cell board[][BOARD_WIDTH], int i, int j) {
     board[(i + 1) % BOARD_HEIGHT][(j + 1) % BOARD_WIDTH]
   };
 
-  // Iterate thorugh the neighbours and count alive ones
+  // Iterate through the neighbours and count alive ones
   for (int k = 0; k < 8; k++) {
     if(is_alive(neighbours[k]))
       count++;

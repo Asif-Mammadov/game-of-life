@@ -27,11 +27,11 @@ enum Colors {
     BLUE_BKG,
     MAGENTA_BKG,
     CYAN_BKG,
-    WHITE_BKG    
+    WHITE_BKG
 };
 
-void setupConsole();
-void restoreConsole();
+void setup_console();
+void restore_console();
 
 /**
  * Sets the text color of console to given color

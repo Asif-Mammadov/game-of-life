@@ -1,6 +1,7 @@
 /**
  * @file ansi.c
- * @brief Source file for configuration of console for different OS
+ * @brief Source file for configuration of console for different OS and
+ * ANSI coloring functions
  */
 
 #ifdef _WIN32
@@ -26,7 +27,7 @@ static DWORD outModeInit, inModeInit;
 /**
  * Setup the console to be able to use ANSI escape codes in Windows
  */
-void setupConsole() {
+void setup_console() {
     DWORD outMode = 0, inMode = 0;
     stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     stdinHandle = GetStdHandle(STD_INPUT_HANDLE);
@@ -56,7 +57,7 @@ void setupConsole() {
 /**
  * Set console config to default for Windows
  */
-void restoreConsole() {
+void restore_console() {
     // Reset colors
     printf("\x1b[0m");    
     
@@ -73,7 +74,7 @@ static struct termios new_term;
 /**
  * Setup console for MacOS and Linux
  */
-void setupConsole() {
+void setup_console() {
     tcgetattr(STDIN_FILENO, &orig_term);
     new_term = orig_term;
 
@@ -85,7 +86,7 @@ void setupConsole() {
 /**
  * Set console config to default for MacOS and Linux
  */
-void restoreConsole() {
+void restore_console() {
     // Reset colors
     printf("\x1b[0m");
 
