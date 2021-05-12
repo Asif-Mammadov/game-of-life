@@ -1,6 +1,9 @@
 CC = gcc
+CFLAGS = -Wall
+EXEC = game
+OBJ = $(patsubst %.c, %.o, $(wildcard *.c)) 
 
-all: game
+all: $(EXEC)
 
 clean: 
 	rm -f *.o game -r doc dist
@@ -14,5 +17,5 @@ dist:
 %.o: %.c
 	$(CC) -c $< 
 
-game: main.o ansi.o
-	$(CC)  $^ -o $@
+$(EXEC): $(OBJ)
+	$(CC)  $^ -o $@ $(CFLAGS)
