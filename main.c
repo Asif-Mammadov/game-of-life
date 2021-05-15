@@ -30,6 +30,7 @@ int main() {
     B_destroy(board);
     board = new_board;
   }
+  B_destroy(new_board);
 
   restore_console();
 

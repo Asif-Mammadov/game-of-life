@@ -125,19 +125,6 @@ void B_print(Board *board) {
 }
 
 /**
- * Copies the cell values from one board to another
- * @param dest_board 2D array where the values of src_board are copied
- * @param src_board 2D array. The values will be copied to the dest_board
- */
-void copy_board(Board *dest_board, Board *src_board) {
-  dest_board->height = src_board->height;
-  dest_board->width = dest_board->width;
-  for (int i = 0; i < src_board->height; i++)
-    for (int j = 0; j < src_board->width; j++)
-      dest_board->cell[i][j] = src_board->cell[i][j];
-}
-
-/**
  * Frees the memory allocated by the given board.
  * @param Pointer to struct board
  */
