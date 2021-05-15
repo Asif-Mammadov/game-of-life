@@ -6,6 +6,7 @@
 #include "ansi.h"
 #include "board.h"
 #include <stdio.h>
+#include <unistd.h>
 
 #define BOARD_WIDTH (5)  /**< The width of the board */
 #define BOARD_HEIGHT (5) /**< The height of the board */
@@ -15,20 +16,20 @@ int main() {
 
   Board *board = B_new(BOARD_HEIGHT, BOARD_WIDTH);
 
-  // Example of cell at (2, 2) with 3 neighbours.
-  board->cell[1][1] = ALIVE;
-  board->cell[1][3] = ALIVE;
-  board->cell[2][2] = ALIVE;
-  board->cell[3][3] = ALIVE;
+  // Generate board with 33% probability of cells being alive
+  board = B_generate(board, 33);
 
   Board *new_board;
-  for (int i = 0; i < 5; i++) {
-    printf("(t : %d)\n", i);
+  int i = 0;
+  while (1) {
+    clean();
+    printf("(t : %d)\n", i++);
     B_print(board);
     printf("\n");
     new_board = B_update(board);
     B_destroy(board);
     board = new_board;
+    sleep(1);
   }
   B_destroy(new_board);
 
