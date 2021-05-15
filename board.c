@@ -5,6 +5,7 @@
 #include "board.h"
 #include "ansi.h"
 #include <stdlib.h>
+#include <time.h>
 /**
  * Creates new reset (all cells are dead) board
  * @param height Heigth of the board
@@ -126,7 +127,7 @@ void B_print(Board *board) {
 
 /**
  * Frees the memory allocated by the given board.
- * @param Pointer to struct board
+ * @param board Pointer to struct board
  */
 void B_destroy(Board *board) {
   if (board == NULL) {
@@ -138,4 +139,50 @@ void B_destroy(Board *board) {
   }
   free(board->cell);
   free(board);
+}
+
+/**
+ * Generates random arrangement of dead and alive cells of given board.
+ * @param board Pointer to struct board
+ * @param p Probability of cell being alive. Range of p is [0; 100]. Otherwise
+ * print error to console and terminate the execution.
+ * @return Pointer to struct board
+ */
+Board *B_generate(Board *board, int p) {
+  if (p < 0 || p > 100) {
+    printf("Probability should be between 0 and 100");
+    exit(1);
+  }
+  srand((unsigned)time(NULL));
+  int d;
+  for (int i = 0; i < board->height; i++) {
+    for (int j = 0; j < board->width; j++) {
+      d = rand() % 100;
+      if (d < p)
+        B_set_alive(board, i, j);
+      else
+        B_set_dead(board, i, j);
+    }
+  }
+  return board;
+}
+
+/**
+ * Makes the cell at given coordinates dead
+ * @param board Pointer to struct board
+ * @param row integer representing the row coordinate of the cell
+ * @param col integer representing the column coordinate of the cell
+ */
+void B_set_dead(Board *board, int row, int col) {
+  board->cell[row][col] = DEAD;
+}
+
+/**
+ * Makes the cell at given coordinates alive
+ * @param board Pointer to struct board
+ * @param row integer representing the row coordinate of the cell
+ * @param col integer representing the column coordinate of the cell
+ */
+void B_set_alive(Board *board, int row, int col) {
+  board->cell[row][col] = ALIVE;
 }
