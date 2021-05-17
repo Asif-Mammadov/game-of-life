@@ -3,8 +3,8 @@
  * @brief Main source file for step 1 in game-of-life
  */
 
-#include "ansi.h"
-#include "board.h"
+#include <ansi.h>
+#include <board.h>
 #include <stdio.h>
 #include <unistd.h>
 
