@@ -2,8 +2,8 @@
  * @file board.c
  * @brief Contains functions related to interactions with the Board
  */
-#include "board.h"
-#include "ansi.h"
+#include <ansi.h>
+#include <board.h>
 #include <stdlib.h>
 #include <time.h>
 /**

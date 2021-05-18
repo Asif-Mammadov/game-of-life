@@ -52,6 +52,9 @@ Mkfile.old
 dkms.conf
 
 # Build files
-game
+build
 doc
 dist
+
+# IDE files
+.vscode
