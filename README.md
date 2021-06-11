@@ -1,13 +1,18 @@
-# Game of Life: Step 2
+# Game of Life: Step 3 (2 Versions)
 
 ## Introduction
-In this step, the initial version of the project created in the first step was improved by splitting the source code into different directories and replacing Makefile with CMake.
+In this step, the Game of Life obtained 2 versions: **circular** and **clipped**. The game is run and displayed on the terminal.
 
 ## Launch
 - Create a CMake-generated project directory by running: `cmake . -B build`
 - Set it as current directory: `cd build`
 - Run: `make`
-- Start the program by compiling the generated binary file: `./gol`
+- Start the program by compiling the generated binary file with version<sup>1</sup> option: `./gol -v <version>`
+
+Example : `./gol -v clipped`
+
+<sup>1</sup> Parameters for version can be either "circular" or "clipped". Make attention to the spelling.
+
 
 ## Terminate
 - Press `Ctrl + C`
