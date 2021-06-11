@@ -12,10 +12,11 @@
  * @param width Width of the board
  * @return Pointer to the board structure
  */
-Board *B_new(int height, int width) {
+Board *B_new(int height, int width, Version version) {
   Board *board = (Board *)malloc(sizeof(Board));
   board->height = height;
   board->width = width;
+  board->version = version;
   board->cell = (Cell **)malloc(height * sizeof(Cell *));
   for (int i = 0; i < height; i++) {
     board->cell[i] = (Cell *)malloc(width * sizeof(Cell));
@@ -29,19 +30,24 @@ Board *B_new(int height, int width) {
  * @return Pointer to the new struct Board with updated cell values
  */
 Board *B_update(Board *board) {
-  int alive_neighbours;
-  Board *new_board = B_new(board->height, board->width);
+  int alive_neighbours[board->height][board->width];
+  Board *new_board = B_new(board->height, board->width, board->version);
+
   for (int i = 0; i < board->height; i++) {
     for (int j = 0; j < board->width; j++) {
-      alive_neighbours = _count_alive_neighbours(board, i, j);
+      alive_neighbours[i][j] = _count_alive_neighbours(board, i, j);
+    }
+  }
+  for (int i = 0; i < board->height; i++) {
+    for (int j = 0; j < board->width; j++) {
       // Dead cell becomes alive if it has 3 alive neighbours
-      if (alive_neighbours == 3)
-        new_board->cell[i][j] = ALIVE;
+      if (alive_neighbours[i][j] == 3)
+        B_set_alive(new_board, i, j);
       // Alive cell is still alive if it has 2 alive neighbours
-      else if (alive_neighbours == 2 && _is_alive(board->cell[i][j]))
-        new_board->cell[i][j] = ALIVE;
+      else if (alive_neighbours[i][j] == 2 && B_is_alive(board->cell[i][j]))
+        B_set_alive(new_board, i, j);
       else
-        new_board->cell[i][j] = DEAD;
+        B_set_dead(new_board, i, j);
     }
   }
   return new_board;
@@ -55,7 +61,7 @@ Board *B_update(Board *board) {
 Board *B_reset(Board *board) {
   for (int i = 0; i < board->height; i++)
     for (int j = 0; j < board->width; j++)
-      board->cell[i][j] = DEAD;
+      B_set_dead(board, i, j);
   return board;
 }
 
@@ -71,29 +77,61 @@ static int _count_alive_neighbours(Board *board, int i, int j) {
   int width = board->width;
   int count = 0;
 
-  // We consider that the grid is infinite
-  // If we check the border cell, we need to check the opposite edge too.
-  if (i == 0)
-    i = height;
-  if (j == 0)
-    j = width;
-
   // List of neighbours of the given cell
-  Cell neighbours[] = {board->cell[i - 1][j - 1],
-                       board->cell[i - 1][j % width],
-                       board->cell[i - 1][(j + 1) % width],
-                       board->cell[i % height][j - 1],
-                       board->cell[i % height][(j + 1) % width],
-                       board->cell[(i + 1) % height][j - 1],
-                       board->cell[(i + 1) % height][j % width],
-                       board->cell[(i + 1) % height][(j + 1) % width]};
 
-  // Iterate through the neighbours and count alive ones
-  for (int k = 0; k < 8; k++) {
-    if (_is_alive(neighbours[k]))
-      count++;
+  if (board->version == CIRCULAR) {
+    if (i == 0)
+      i = height;
+    if (j == 0)
+      j = width;
+    Cell neighbours_circle[] = {board->cell[i - 1][j - 1],
+                                board->cell[i - 1][j % width],
+                                board->cell[i - 1][(j + 1) % width],
+                                board->cell[i % height][j - 1],
+                                board->cell[i % height][(j + 1) % width],
+                                board->cell[(i + 1) % height][j - 1],
+                                board->cell[(i + 1) % height][j % width],
+                                board->cell[(i + 1) % height][(j + 1) % width]};
+
+    // We consider that the grid is infinite
+    // If we check the border cell, we need to check the opposite edge too.
+
+    // Iterate through the neighbours and count alive ones
+    for (int k = 0; k < 8; k++) {
+      if (B_is_alive(neighbours_circle[k]))
+        count++;
+    }
+  } else if (board->version == CLIPPED) {
+    // CLIPPED version
+    if (i != 0) {
+      if (j != 0)
+        if (B_is_alive(board->cell[i - 1][j - 1]))
+          count++;
+      if (B_is_alive(board->cell[i - 1][j]))
+        count++;
+      if (j != width - 1)
+        if (B_is_alive(board->cell[i - 1][j + 1]))
+          count++;
+    }
+    if (j != 0)
+      if (board->cell[i][j - 1])
+        count++;
+    if (j != width - 1)
+      if (B_is_alive(board->cell[i][j + 1]))
+        count++;
+
+    if (i != height - 1) {
+      if (j != 0)
+        if (B_is_alive(board->cell[i + 1][j - 1]))
+          count++;
+
+      if (B_is_alive(board->cell[i + 1][j]))
+        count++;
+      if (j != width - 1)
+        if (B_is_alive(board->cell[i + 1][j + 1]))
+          count++;
+    }
   }
-
   return count;
 }
 
@@ -102,7 +140,7 @@ static int _count_alive_neighbours(Board *board, int i, int j) {
  * @param c Cell type that can be either DEAD or ALIVE
  * @return 1 If the cell is alive. Otherwise return 0.
  */
-static int _is_alive(Cell c) { return (c == ALIVE); }
+int B_is_alive(Cell c) { return (c == ALIVE); }
 
 /**
  * Prints the cell values in board to the terminal as a grid with rows and
@@ -112,7 +150,7 @@ static int _is_alive(Cell c) { return (c == ALIVE); }
 void B_print(Board *board) {
   for (int i = 0; i < board->height; i++) {
     for (int j = 0; j < board->width; j++) {
-      if (_is_alive(board->cell[i][j]))
+      if (B_is_alive(board->cell[i][j]))
         set_backgound_color(RED_BKG);
       else
         set_backgound_color(WHITE_BKG);

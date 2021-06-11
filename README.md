@@ -1,13 +1,19 @@
-# Game of Life: Step 2
+# Game of Life: Step 3 (2 Versions)
 
 ## Introduction
-In this step, the initial version of the project created in the first step was improved by splitting the source code into different directories and replacing Makefile with CMake.
+In this step, the Game of Life can also be simulated in GUI with SDL2 library. 
 
 ## Launch
 - Create a CMake-generated project directory by running: `cmake . -B build`
 - Set it as current directory: `cd build`
 - Run: `make`
-- Start the program by compiling the generated binary file: `./gol`
+- Start the program by compiling the generated binary file with version<sup>1</sup> option: `./gol -v <version>`
+- You may also choose the type<sup>2</sup> of the game by option -t.
+
+Example : `./gol -v clipped -t gui`
+
+<sup>1</sup> Parameters for version can be either "circular" or "clipped". Make attention to the spelling.
+<sup>2</sup> Parameters for type can be either "terminal" or "gui"
 
 ## Terminate
 - Press `Ctrl + C`
