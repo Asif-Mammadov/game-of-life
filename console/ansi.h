@@ -32,7 +32,6 @@ enum Colors {
 
 void setup_console();
 void restore_console();
-void ansi_display(Board *board);
 /**
  * Sets the text color of console to given color
  * @param code ANSI code of the color
