@@ -11,9 +11,10 @@ target_sources(${PROJECT_NAME} PUBLIC ${SRC})
 # Add subdirectories
 add_subdirectory(console)
 add_subdirectory(board)
+add_subdirectory(gui)
 
 # Specify libraries to use
-target_link_libraries(${PROJECT_NAME} console board)
+target_link_libraries(${PROJECT_NAME} console board gui)
 
 # Install the targets
 install(TARGETS ${PROJECT_NAME})
