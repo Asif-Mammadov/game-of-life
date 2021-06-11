@@ -14,7 +14,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
 #ifdef _WIN32
 // Some old MinGW/CYGWIN distributions don't define this:
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING

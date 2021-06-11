@@ -7,7 +7,7 @@
 #pragma once
 
 #include <stdio.h>
-
+#include<board.h>
 /*! Stores ANSI reset, background and text color codes */
 enum Colors {
   RESET_COLOR,
@@ -32,7 +32,7 @@ enum Colors {
 
 void setup_console();
 void restore_console();
-
+void ansi_display(Board *board);
 /**
  * Sets the text color of console to given color
  * @param code ANSI code of the color
