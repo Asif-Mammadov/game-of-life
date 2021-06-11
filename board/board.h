@@ -31,6 +31,6 @@ void B_destroy(Board *board);
 void B_print(Board *board);
 void B_set_dead(Board *board, int row, int col);
 void B_set_alive(Board *board, int row, int col);
+int B_is_alive(Cell c);
 static int _count_alive_neighbours(Board *board, int i, int j);
-static int _is_alive(Cell c);
 #endif
