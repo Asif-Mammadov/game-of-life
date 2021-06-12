@@ -1,7 +1,7 @@
-# Game of Life: Step 3 (2 Versions)
+# Game of Life: Step 4
 
 ## Introduction
-In this step, the Game of Life can also be simulated in GUI with SDL2 library. 
+The Game of Life is a cellular automaton devised by the British mathematician John Horton Conway in 1970. It is a zero-player game, meaning that its evolution is determined by its initial state, requiring no further input. One interacts with the Game of Life by creating an initial configuration and observing how it evolves. It is Turing complete and can simulate a universal constructor or any other Turing machine. [Wikipedia](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 ## Launch
 - Create a CMake-generated project directory by running: `cmake . -B build`
@@ -26,3 +26,6 @@ For creating a distribution tar file for this program, `make dist` command in th
 
 ## Clear
 Run `make clear` in the **build** directory to delete all files in the source directory that are created by compiling or building the program.
+
+## Tests
+Run `./tests` in the **build** directory to see the results of the tests.
