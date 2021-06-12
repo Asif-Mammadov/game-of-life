@@ -58,3 +58,11 @@ add_custom_target(clear
   COMMENT "Cleaning the build files..."
   VERBATIM
 )
+
+set(TEST tests)
+add_executable(${TEST})
+target_sources(${TEST} PUBLIC test.c)
+target_link_libraries(${TEST} PUBLIC cunit board)
+
+enable_testing()
+add_test(test ${TEST})
