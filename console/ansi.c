@@ -12,9 +12,9 @@
 #include <unistd.h>
 #endif
 
+#include <ansi.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #ifdef _WIN32
 // Some old MinGW/CYGWIN distributions don't define this:
 #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
@@ -23,32 +23,6 @@
 
 static HANDLE stdoutHandle, stdinHandle;
 static DWORD outModeInit, inModeInit;
-
-/** 
- * Displays the board on the terminal
- * @param board pointer to Board structure
- */
-void ansi_display(Board *board) {
-  setup_console();
-
-  // Generate board with 33% probability of cells being alive
-  board = B_generate(board, 33);
-
-  Board *new_board;
-  int i = 0;
-  while (1) {
-    clean();
-    printf("(t : %d)\n", i++);
-    B_print(board);
-    printf("\n");
-    new_board = B_update(board);
-    B_destroy(board);
-    board = new_board;
-    sleep(1);
-  }
-  B_destroy(new_board);
-  restore_console();
-}
 
 /**
  * Setup the console to be able to use ANSI escape codes in Windows

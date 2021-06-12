@@ -4,7 +4,6 @@
  */
 
 #include "board.h"
-#include "board/board.h"
 #include "gui.h"
 #include <ansi.h>
 #include <bits/getopt_core.h>
@@ -30,6 +29,7 @@ typedef enum {
   GUI   /**< The gui type */
 } Type;
 
+void ansi_display(Board *board);
 void usageError(char *progName);
 int main(int argc, char **argv) {
   int opt;
@@ -101,4 +101,30 @@ int main(int argc, char **argv) {
 void usageError(char *progName) {
   fprintf(stderr, "Usage: %s -v <version>\n", progName);
   exit(EXIT_FAILURE);
+}
+
+/** 
+ * Displays the board on the terminal
+ * @param board pointer to Board structure
+ */
+void ansi_display(Board *board) {
+  setup_console();
+
+  // Generate board with 33% probability of cells being alive
+  board = B_generate(board, 33);
+
+  Board *new_board;
+  int i = 0;
+  while (1) {
+    clean();
+    printf("(t : %d)\n", i++);
+    B_print(board);
+    printf("\n");
+    new_board = B_update(board);
+    B_destroy(board);
+    board = new_board;
+    sleep(1);
+  }
+  B_destroy(new_board);
+  restore_console();
 }
